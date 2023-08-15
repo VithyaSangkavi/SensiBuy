@@ -10,13 +10,13 @@ app.use(express.json());
 
 dotenv.config();
 
-const PORT = process.env.PORT || 4001
+const PORT = process.env.PORT || 4001;
 
 app.listen(PORT, () => {
-    console.log("Server Started");
-    connectDatabase();
-})
+  console.log("Server Started");
+  connectDatabase();
+});
 
 app.get("/", (req, res) => {
-    res.json("Server Started")
-})
+  res.json("Server Started");
+});
