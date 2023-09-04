@@ -82,26 +82,25 @@ export const deleteUserById = async (req, res) => {
     try {
       const { userEmail, password } = req.body;
   
-      // Find the user by email
-      const user = await User.findOne({ userEmail });
-  
+      const user = await User.findOne({ where: { userEmail } });
       if (!user) {
-        return res.status(404).json({ error: 'User not found' });
+        return res.status(401).json({ error: 'Invalid credentials' });
       }
   
-      // Check if the password is correct
-      const passwordMatch = await bcrypt.compare(password, user.password);
-  
-      if (!passwordMatch) {
-        return res.status(401).json({ error: 'Invalid password' });
+      const isPasswordValid = await bcrypt.compare(password, user.password);
+      if (!isPasswordValid) {
+        return res.status(401).json({ error: 'Invalid credentials' });
       }
   
-      // Generate a JWT token
-      const token = jwt.sign({ userId: user._id }, 'your_secret_key', {
-        expiresIn: '1h', // Set the token expiration time (e.g., 1 hour)
-      });
+      // Generate JWT token
+      const token = jwt.sign(
+        { id: user._id, email: user.userEmail},
+        process.env.JWT_SECRET_KEY,
+        { expiresIn: '1h' }
+      );
   
-      res.status(200).json({ token });
+      console.log(token);
+      res.json({ token, userType: user.userType, user });
     } catch (error) {
       console.error('Error logging in:', error.message);
       res.status(500).json({ error: 'Internal server error' });
