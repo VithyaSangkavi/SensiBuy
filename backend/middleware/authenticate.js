@@ -1,6 +1,8 @@
-const jwt = require('jsonwebtoken');
-require('dotenv').config();
-const User = require('../models/User.model.js');
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
+import User from '../models/User.model.js';
+
+dotenv.config();
 
 const authenticate = async (req, res, next) => {
   const token = req.header('Authorization');
@@ -12,15 +14,14 @@ const authenticate = async (req, res, next) => {
   try {
     const tokenWithoutBearer = token.replace('Bearer ', ''); // Remove "Bearer " prefix
     const decoded = await jwt.verify(tokenWithoutBearer, process.env.JWT_SECRET_KEY);
-    const user = await User.findById(decoded.id); 
+    const user = await User.findById(decoded.id);
 
     if (!user) {
       return res.status(401).json({ message: 'Invalid user' });
     }
 
     req.user = {
-      id: user.id,
-      userType: user.userType,
+      firstName: user.firstName,
     };
 
     next();
@@ -29,4 +30,4 @@ const authenticate = async (req, res, next) => {
   }
 };
 
-module.exports = authenticate;
+export default authenticate;
