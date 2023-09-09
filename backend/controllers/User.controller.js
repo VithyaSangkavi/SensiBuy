@@ -4,12 +4,12 @@ import jwt from 'jsonwebtoken';
 
 export const createUser = async (req, res) => {
   try {
-    const { firstName, lastName, userEmail, password, imageUrl } = req.body;
+    const { firstName, lastName, userEmail, password, userType, imageUrl } = req.body;
 
     // Hash the password with the specified number of salt rounds
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const newUser = await User.create({ firstName, lastName, userEmail, password: hashedPassword, imageUrl });
+    const newUser = await User.create({ firstName, lastName, userEmail, password: hashedPassword, userType, imageUrl });
     res.status(201).json(newUser);
   } catch (error) {
     console.error('Error creating user:', error.message);
@@ -110,6 +110,27 @@ export const deleteUserById = async (req, res) => {
       res.status(500).json({ error: 'Internal server error' });
     }
   };
+
+const invalidatedTokens = new Set();
+
+export const logoutUser = async (req, res) => {
+  try {
+    const { token } = req.body;
+
+    // Add the token to the invalidated tokens list
+    invalidatedTokens.add(token);
+
+    res.status(200).json({ message: 'Logged out successfully' });
+  } catch (error) {
+    console.error('Error logging out backend:', error.message);
+    res.status(500).json({ error: 'Internal server error' });
+  }
+};
+
+export const isTokenValid = (token) => {
+  // Check if the token is in the invalidatedTokens set
+  return !invalidatedTokens.has(token);
+};
   
   
   
