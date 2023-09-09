@@ -45,20 +45,20 @@ const Navbar = () => {
         </div>
       </div>
       <ul className="flex space-x-4 jusify-center">
-        <li><a href="#" className="hover:text-gray-300">Home</a></li>
-        <li><a href="#" className="hover:text-gray-300">About Us</a></li>
-        <li><a href="#" className="hover:text-gray-300">Contact Us</a></li>
-        <li><a href="#" className="hover:text-gray-300">Services</a></li>
+        <li><a href="#" className="link-light link-offset-2 link-underline link-underline-opacity-0">Home</a></li>
+        <li><a href="#" className="link-light link-offset-2 link-underline link-underline-opacity-0">About Us</a></li>
+        <li><a href="#" className="link-light link-offset-2 link-underline link-underline-opacity-0">Contact Us</a></li>
+        <li><a href="#" className="link-light link-offset-2 link-underline link-underline-opacity-0">Services</a></li>
         <li></li>
         <li></li>
         <li></li>
         {user ? (
           <>
-            <li><span className="text-gray-300">Hello, {user.userName}</span></li>
-            <li><button onClick={handleLogout} className="hover:text-gray-300 border px-4 py-2 rounded-lg">Logout</button></li>
+            <li><span className="link-light link-offset-2 link-underline link-underline-opacity-0">Hello, {user.userName}</span></li>
+            <li><button onClick={handleLogout} className="link-light link-offset-2 link-underline link-underline-opacity-0">Logout</button></li>
           </>
         ) : (
-          <li><a href="/login" className="hover:text-gray-300 border px-4 py-2 rounded-lg">Login</a></li>
+          <li><a href="/login" className="link-light link-offset-2 link-underline link-underline-opacity-0">Login</a></li>
         )}
       </ul>
     </nav>

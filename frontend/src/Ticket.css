@@ -1,0 +1,107 @@
+.Container{
+    margin-left: 17%;
+    border-radius: 10px;
+    border-color: #17237c;
+    
+
+
+}
+.Card{
+    border-color: #17237c;
+    border-width: 2px;
+}
+
+.Container h1{
+  font-size: 40px;
+  color: #17237c; 
+  margin-bottom: 20px; 
+  margin-top: 20px;
+  margin-left: 35%;
+
+  }
+
+.left_view h3{
+    font-size: 25px;
+    color: #1b288d;
+    font-weight: 600;
+}
+
+.left_view h4{
+    font-size: 20px;
+    color: #585a6c;
+    font-weight: 600;
+}
+
+.left_view h5{
+    font-size: 18px;
+    color: #1c2f3d;
+    font-weight: 600;
+}
+
+.left_view h6{
+    font-size: 12px;
+    color: #3c474f;
+    font-weight: 600;
+}
+
+.left_view span{
+    font-weight: 400;
+}
+
+.right_view h3{
+    font-size: 25px;
+    color: #1b288d;
+    font-weight: 600;
+}
+
+.right_view h4{
+    font-size: 20px;
+    color: #2d3472;
+    font-weight: 600;
+}
+
+.right_view h5{
+    font-size: 18px;
+    color: #1c2f3d;
+    font-weight: 600;
+}
+
+.right_view h6{
+    font-size: 12px;
+    color: #3c474f;
+    font-weight: 600;
+}
+
+.right_view span{
+    font-weight: 400;
+    
+}
+
+.right_view span2{
+    font-weight: 700;
+    
+}
+
+
+.btn_tick {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    margin-left: 20px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+    background-color: #233876;
+    color: #ffffff;
+  }
+  
+ 
+  
+  /* Hover Effect */
+  .btn_tick:hover {
+    background-color: #2980b9;
+  }

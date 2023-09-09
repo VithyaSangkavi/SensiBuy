@@ -1,36 +1,34 @@
 import Ticket from '../models/ticket.js';
-import {bcrypt, saltRounds } from '../configs/bcrypt.js';
 
 export const addTicket = async (req, res) => {
-    const {
-      tTitle,
-      tType,
-      tContent,
-      tDate,
-      tReply,
-      tReplyDate,
-      tStatus,
-    } = req.body;
-  
-    const newTicket = new Ticket({
-      tTitle,
-      tType,
-      tContent,
-      tDate,
-      tReply,
-      tReplyDate,
-      tStatus
-    });
-  
-    await newTicket
-      .save()
-      .then(() => {
-        //body
-        res.json("New Ticket added Successfully");
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+    try {
+        const {
+          tTitle,
+          tType,
+          tContent,
+          tDate,
+          tReply,
+          tReplyDate,
+          tStatus,
+        } = req.body;
+    
+        const newTicket = new Ticket({
+          tTitle,
+          tType,
+          tContent,
+          tDate,
+          tReply,
+          tReplyDate,
+          tStatus,
+        });
+    
+        await newTicket.save();
+    
+        res.status(201).json({ message: "New Ticket added Successfully" });
+      } catch (error) {
+        console.error("Error while adding a new ticket:", error);
+        res.status(500).json({ error: "Internal Server Error" });
+      }
   };
   
   
@@ -50,7 +48,7 @@ export const addTicket = async (req, res) => {
   
   export const getAllTickets = async (req, res, next) => {
     try {
-      const tickets = await ticketModel.find().sort({ createdAt: -1 });
+      const tickets = await Ticket.find().sort({ createdAt: -1 });
       res.status(200).json(tickets);
     } catch (err) {
       next(err);
@@ -81,7 +79,7 @@ export const addTicket = async (req, res) => {
       tStatus,
     };
   
-    const update = await ticketModel
+    const update = await Ticket
       .findByIdAndUpdate(ticketID, updateTickets)
       .then(() => {
         res.status(200).send({ status: "Ticket information updated" });
@@ -99,7 +97,7 @@ export const addTicket = async (req, res) => {
   export const deleteTicket = async (req, res) => {
     let ticketID = req.params.id;
   
-    await ticketModel
+    await Ticket
       .findByIdAndDelete(ticketID)
       .then(() => {
         res.status(200).send({ status: "Ticket deleted" });
@@ -129,7 +127,7 @@ export const addTicket = async (req, res) => {
   
   export const getOneTicket = async (req, res, next) => {
     try {
-      const ticket = await ticketModel.findById(req.params.id);
+      const ticket = await Ticket.findById(req.params.id);
       res.status(200).json(ticket);
     } catch (err) {
       next(err);
