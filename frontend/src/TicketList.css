@@ -1,0 +1,74 @@
+/* TicketList.css */
+.add_btn{
+  text-align: right;
+  padding-left: 20px;
+  padding-right: 20px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  font-size: large;
+}
+
+.table {
+  width: 1200px;
+  border-collapse: collapse;
+  margin: 20px 0;
+  margin-left: 70px;
+  border-radius: 10px;
+  box-shadow: 0 6px 8px rgba(0, 0, 0, 0.1);
+  font-size: 20px;
+  overflow: hidden;
+}
+
+.table th,
+.table td {
+  border: 1px solid #ddd;
+  padding: 12px;
+  text-align: left;
+}
+
+.table th {
+  background-color: #f2f2f2;
+  font-weight: bold;
+}
+
+.table tbody tr:hover {
+  background-color: #f5f5f5;
+  transition: background-color 0.3s;
+}
+
+/* Button styles */
+.table button {
+  padding: 8px 16px;
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  border-radius: 5px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+/* Colors for buttons */
+.table button.view {
+  background-color: #053263; /* Blue */
+  color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+  
+}
+
+.table button.edit {
+  background-color: #124d20; /* Green */
+  color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+}
+
+.table button.delete {
+  background-color: #590d14; /* Red */
+  color: white;
+  padding-left: 10px;
+  padding-right: 10px;
+  margin-left: 10px;
+}
+
