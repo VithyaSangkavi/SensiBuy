@@ -19,9 +19,12 @@ const newUser = new Schema({
     type: String,
     required: true,
   },
-  imageUrl: {
+  userType: {
     type: String,
   },
+  imageUrl: {
+    type: String
+  }
 });
 
 const User = mongoose.model('User', newUser);
