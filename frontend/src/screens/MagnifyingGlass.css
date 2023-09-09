@@ -1,0 +1,20 @@
+/* MagnifyingGlass.css */
+
+.magnifying-glass {
+  position: relative;
+  overflow: hidden;
+  cursor: zoom-in;
+}
+
+.magnifying-glass img {
+  max-width: 100%;
+  height: auto;
+  transition: transform 0.3s ease-in-out, width 0.3s ease-in-out, height 0.3s ease-in-out;
+}
+
+.magnifying-glass.magnified img {
+  transform: scale(3); /* You can adjust the scale factor as needed */
+  transform-origin: 50% 50%;
+  width: auto; /* Adjust to expand the width */
+  height: auto; /* Adjust to expand the height */
+}
