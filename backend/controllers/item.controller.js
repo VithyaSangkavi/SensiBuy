@@ -31,12 +31,20 @@ export const createItem = async (req, res) => {
 };
 
 //get Item by ID
+// In your backend controller
 export const getItemById = async (req, res) => {
   const { id } = req.params;
   try {
     const item = await Item.findById(id);
     if (item) {
-      res.status(200).json(item);
+      // Send the item details in the response
+      res.status(200).json({
+        name: item.name,
+        description: item.description,
+        price: item.price,
+        imageUrl: item.imageUrl,
+        available: item.available,
+      });
     } else {
       res.status(404).json({ error: 'Item not found' });
     }
