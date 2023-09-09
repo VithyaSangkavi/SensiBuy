@@ -1,31 +1,66 @@
 import React, { useState } from 'react';
 import axios from 'axios'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
+import LoginImage from '../../images/login.png'
+
 
 function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
+  // const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+  // recognition.lang = 'en-US'; // Set the language to English (or your preferred language)
+  // recognition.continuous = false; // Disable continuous recognition
+
+  // recognition.onresult = (event) => {
+  //   const transcript = event.results[0][0].transcript;
+  //   setEmail(transcript); // Update the email input field with the recognized text
+  // };
+
+  // recognition.onend = () => {
+  //   // Speech recognition ended
+  //   // You can choose to restart recognition here if needed
+  // };
+
+  const speakLabel = (labelText) => {
+    const utterance = new SpeechSynthesisUtterance(labelText);
+    window.speechSynthesis.speak(utterance);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-  
+
     try {
       const response = await axios.post('http://localhost:4000/api/users/login', {
         userEmail: email,
         password: password
       });
-  
+
       if (response.status === 200) {
         const data = response.data;
         const firstName = data.user.firstName;
-  
+
         localStorage.setItem('token', data.token);
         localStorage.setItem('userName', data.user.firstName);
-  
+        localStorage.setItem('userType', data.user.userType);
+        localStorage.setItem('userID', data.user._id);
+
         console.log('Login successful:');
         console.log('User Name: ', firstName);
-  
+        console.log('user type', data.user.userType);
+        console.log('userID: ', data.user._id)
+
+
+        if (data.user.userType === 'Admin') {
+          navigate('/AdminInterface');
+        } else if (data.user.userType === 'User') {
+          navigate('/UserInterface');
+        } else {
+          console.log('Login unsuccessful: Unknown userType', data.userType);
+          alert('Invalid Login');
+        }
+
         window.location.reload();
 
       } else {
@@ -48,28 +83,44 @@ function LoginForm() {
       }
     }
   };
-  
+
   return (
     <>
-      <div className='min-h-screen flex justify-center items-center'>
-        <div className='border-2 border[#1F2937] p-16'>
-          <form onSubmit={handleSubmit}>
-            <div>
-              <label>Email Address</label> <br />
-              <input type="email" placeholder="Email Address" className='border-2 border[#1F2937] w-[250px] h-[35px]' value={email} onChange={(e) => setEmail(e.target.value)} />
-            </div>
-            <br />
-            <div>
-              <label>Password</label> <br />
-              <input type="password" placeholder="password" className='border-2 border[#1F2937] w-[250px] h-[35px]' value={password} onChange={(e) => setPassword(e.target.value)} />
-            </div>
-            <br />
-            <button type="submit" className='bg-[#5850EC] pr-20 pl-20 pt-2 pb-2 text-white w-[250px] h-[35px] font-bold'>Sign in</button>
-          </form>
+      <div className="flex min-h-screen justify-center mt-[100px] h-[400px]">
+        <div className="flex shadow-none md:shadow-[0_0_10px_rgba(0,0,0,0.5)] h-[300px] md:h-[350px] border-2">
+          <div className="bg-blue-900 w-[300px] h-[400px] hidden md:block relative p-[15px]">
+            <img
+              src={LoginImage}
+              alt="Signup Image"
+              className="w-full h-full object-cover"
+            />
+          </div>
         </div>
-      </div>
-    </>
-  );
+        <div className="flex shadow-none md:shadow-[0_0_10px_rgba(0,0,0,0.5)] w-[400px] md:h-[400px] border-2">
+          <div className="w-full px-[50px] h-[400px] ">
+            <form onSubmit={handleSubmit}>
+              <br/><br/>
+              <h1 className='font-bold text-xl text-blue-900' onMouseEnter={() => speakLabel('Please provide your login credentials')}>Login to your account</h1><br />
+              <div>
+                <label onMouseEnter={() => speakLabel('Enter your email address')}>Email Address</label> <br />
+                <input type="email" placeholder="Email Address" className='border-2 border[#1F2937] w-[250px] h-[35px]' value={email} onChange={(e) => setEmail(e.target.value)} />
+              </div>
+              <br />
+              <div>
+                <label onMouseEnter={() => speakLabel('Enter your password')}>Password</label> <br />
+                <input type="password" placeholder="password" className='border-2 border[#1F2937] w-[250px] h-[35px]' value={password} onChange={(e) => setPassword(e.target.value)} />
+              </div>
+              <br />
+              <button onMouseEnter={() => speakLabel('Click to signin')} type="submit" className='bg-blue-900 pr-20 pl-20 pt-2 pb-2 text-white w-[250px] h-[35px] font-bold'>Sign in</button>
+              <br />
+              <br />
+              <Link to="/signup"> Don't have an account? Create Account</Link>
+            </form>
+          </div>
+        </div>
+        </div>
+      </>
+      );
 }
 
-export default LoginForm;
+      export default LoginForm;
