@@ -6,58 +6,18 @@ import ProfileImage from '../../images/profileImage.png'
 const Profile2 = () => {
     const navigate = useNavigate('');
 
-
     const [user, setUser] = useState(null);
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [userEmail, setUserEmail] = useState("");
-    const [imageUrl, setImageUrl] = useState("");
-    const [newImageUrl, setNewImageUrl] = useState("");
 
     const userID = localStorage.getItem('userID')
 
+    const selectedLanguage = localStorage.getItem("selectedLanguage") || "English";
+
     const [loading, setLoading] = useState(false);
-
-    const convertBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    }
-
-    //uploading the image
-    const uploadImage = async (event) => {
-        event.preventDefault();
-
-        const file = event.target.files[0];
-        const base64 = await convertBase64(file);
-        setLoading(true);
-        console.log(base64);
-        axios
-            .post(`http://localhost:4000/uploadImage`, { image: base64 })
-            .then((res) => {
-                console.log(res.data);
-                setNewImageUrl(res.data);
-
-                //res.data
-                alert("Image uploaded Succesfully");
-                
-            })
-            .then(() => setLoading(false))
-            .catch((error) => {
-                console.log(error.message);
-            })
-    };
-
+    const [emailError, setEmailError] = useState('');
 
     useEffect(() => {
         // Fetch user profile data from the server
@@ -73,7 +33,7 @@ const Profile2 = () => {
                     setFirstName(response.data.firstName);
                     setLastName(response.data.lastName);
                     setUserEmail(response.data.userEmail);
-                    setImageUrl(response.data.imageUrl)
+                    //setImageUrl(response.data.imageUrl)
 
                 } else {
                     console.error('Failed to fetch user profile:', response.data.error);
@@ -92,23 +52,71 @@ const Profile2 = () => {
     //     });
     // };
 
+    const validateName = (name) => {
+        // Check if the name contains only letters (no numbers or special characters)
+        return /^[A-Za-z]+$/.test(name);
+    };
+
+    const validateEmail = (email) => {
+        // Check if the email is in the proper format using a simple regex pattern
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
 
     const handleSubmit = async (e) => {
 
         e.preventDefault();
 
+
+        // Validate first name
+        if (!validateName(firstName)) {
+            if (selectedLanguage === 'Sinhala') {
+                setEmailError('මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය');
+            } else {
+                setEmailError('First name should contain only letters');
+            }
+            return;
+        }
+
+        // Validate last name
+        if (!validateName(lastName)) {
+            if (selectedLanguage === 'Sinhala') {
+                setEmailError('අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය');
+            } else {
+                setEmailError('Last name should contain only letters');
+            }
+            return;
+        }
+
+        // Validate email
+        if (!validateEmail(userEmail)) {
+            if (selectedLanguage === 'Sinhala') {
+                setEmailError('වලංගු නොවන ඊමේල් ආකෘතිය');
+            } else {
+                setEmailError('Invalid email format');
+            }
+            return;
+        }
+
         const updateDetails = {
             firstName: firstName,
             lastName: lastName,
             userEmail: userEmail,
-            imageUrl: newImageUrl || imageUrl
         }
 
         await axios.put(`http://localhost:4000/api/users/${userID}`, updateDetails).then(() => {
+            console.log('Update Successful:', updateDetails);
+           // selectedLanguage === "Sinhala" ? speakSinhala('ගිණුම සාර්ථකව යාවත්කාලීන කරන ලදී') : speakLabel('Profile updated successfully');
             alert('Profile updated successfully')
+            if (selectedLanguage === 'Sinhala') {
+                speakSinhala('ගිණුම සාර්ථකව යාවත්කාලීන කරන ලදී');
+            } else {
+                speakLabel('Profile updated successfully');
+            }
             window.location.reload();
 
         }).catch((err) => {
+            console.log('Update failed:', err.message);
             alert('Update Failed ' + err.message);
         })
 
@@ -132,7 +140,7 @@ const Profile2 = () => {
                     // Profile deleted successfully
                     console.log('Profile deleted:', response.data);
                     alert('Profile Deleted Successfully!');
-                    navigate('/LandingPage')
+                    navigate('/')
 
                 } else {
                     // Handle the case where the deletion failed
@@ -154,6 +162,12 @@ const Profile2 = () => {
         window.speechSynthesis.speak(utterance);
     };
 
+    const speakSinhala = (sinhalaLabel) => {
+        const utterance = new SpeechSynthesisUtterance(sinhalaLabel);
+        utterance.lang = "si-LK"
+        window.speechSynthesis.speak(utterance);
+    }
+
     return (
 
         <div>
@@ -162,99 +176,118 @@ const Profile2 = () => {
                     <br />
                     <h1 className="text-2xl font-semibold mb-4 text-center">Your Profile</h1>
                     <div className="mb-4 w-full justify-center flex">
-                        <img src={imageUrl || ProfileImage } className='w-[150px] h-[150px] rounded-full ' />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2"
-                            onMouseEnter={() => speakLabel('Your User ID is ' + userID)}>
-                            User ID:
-                        </label>
-                        <input
-                            className="w-full border rounded py-2 px-3"
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            value={userID}
-                            disabled='true'
-                        />
+                        <img src={ProfileImage} className='w-[150px] h-[150px] rounded-full ' />
                     </div>
                     <div className='flex gap-[50px] w-full'>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2"
-                            onMouseEnter={() => speakLabel('Your first name is ' + firstName)}>
-                            First Name:
-                        </label>
-                        <input
-                            className="w-[330px] border rounded py-2 px-3"
-                            type="text"
-                            id="firstName"
-                            name="firstName"
-                            value={firstName}
-                            onChange={(e) => { setFirstName(e.target.value) }}
-                            onMouseEnter={() => speakLabel()}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2"
-                            onMouseEnter={() => speakLabel('Your last name is ' + lastName)}>
-                            Last Name:
-                        </label>
-                        <input
-                            className="w-[330px] border rounded py-2 px-3"
-                            type="text"
-                            id="lastName"
-                            name="lastName"
-                            value={lastName}
-                            onChange={(e) => { setLastName(e.target.value) }}
-                        />
-                    </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2"
+                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ පරිශීලක හැඳුනුම්පත, ' + userID) : speakLabel('Your User ID is ' + userID)}>
+                                User ID:
+                            </label>
+                            <input
+                                className="w-[330px] border rounded py-2 px-3"
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                value={userID}
+                                disabled='true'
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2"
+                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ඊමේල්, ' + userEmail) : speakLabel('Your email is ' + userEmail)}>
+                                Email:
+                            </label>
+                            <input
+                                className="w-[330px] border rounded py-2 px-3"
+                                type="email"
+                                id="email"
+                                name="email"
+                                value={userEmail}
+                                onChange={(e) => { setUserEmail(e.target.value) }}
+                            />
+                            {validateEmail(userEmail) ? (
+                                // Valid input
+                                null
+                            ) : (
+                                // Display an error message
+                                <p className="text-red-500 font-bold text-sm"  onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('වලංගු නොවන ඊමේල් ආකෘතිය') : speakLabel('Invalid email format')}>
+                                    {selectedLanguage === 'Sinhala'
+                                        ? 'වලංගු නොවන ඊමේල් ආකෘතිය'
+                                        : 'Invalid email format'}
+                                </p>
+                            )}
+                        </div>
                     </div>
                     <div className='flex gap-[50px] w-full'>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2"
-                            onMouseEnter={() => speakLabel('Your email is ' + userEmail)}>
-                            Email:
-                        </label>
-                        <input
-                            className="w-[330px] border rounded py-2 px-3"
-                            type="email"
-                            id="email"
-                            name="email"
-                            value={userEmail}
-                            onChange={(e) => { setUserEmail(e.target.value) }}
-                        />
-                    </div>
-                    <div className="mb-4">
-                        <label className="block text-gray-700 text-sm font-bold mb-2"
-                        >
-                            Image:
-                        </label>
-                        <input
-                            className="w-[330px] border rounded py-2 px-3"
-                            type="file"
-                            id="image"
-                            name="image"
-                            onChange={(e) => { uploadImage(e) }}
-                        />
-                    </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2"
+                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබේ මුල් නම, ' + firstName) : speakLabel('Your first name is ' + firstName)}>
+                                First Name:
+                            </label>
+                            <input
+                                className="w-[330px] border rounded py-2 px-3"
+                                type="text"
+                                id="firstName"
+                                name="firstName"
+                                value={firstName}
+                                onChange={(e) => { setFirstName(e.target.value) }}
+                                onMouseEnter={() => speakLabel()}
+                            />
+                            {validateName(firstName) ? (
+                                // Valid input
+                                null
+                            ) : (
+                                // Display an error message
+                                <p className="text-red-500 font-bold text-sm" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය') : speakLabel('First name should contain only letters')}>
+                                    {selectedLanguage === 'Sinhala'
+                                        ? 'මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය'
+                                        : 'First name should contain only letters'}
+                                </p>
+                            )}
+                        </div>
+                        <div className="mb-4">
+                            <label className="block text-gray-700 text-sm font-bold mb-2"
+                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබේ අවසාන නම, ' + lastName) : speakLabel('Your last name is ' + lastName)}>
+                                Last Name:
+                            </label>
+                            <input
+                                className="w-[330px] border rounded py-2 px-3"
+                                type="text"
+                                id="lastName"
+                                name="lastName"
+                                value={lastName}
+                                onChange={(e) => { setLastName(e.target.value) }}
+                            />
+                            {validateName(lastName) ? (
+                                // Valid input
+                                null
+                            ) : (
+                                // Display an error message
+                                <p className="text-red-500 font-bold text-sm" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය') : speakLabel('Last name should contain only letters')}>
+                                    {selectedLanguage === 'Sinhala'
+                                        ? 'අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය'
+                                        : 'Last name should contain only letters'}
+                                </p>
+                            )}
+                        </div>
                     </div>
                     <br />
                     <div className="flex gap-8 ml-[400px] justify-center items-center mb-4">
                         <button
                             className="bg-blue-900 text-white px-2 py-2 rounded hover:bg-blue-600 w-56"
                             onClick={handleSubmit}
-                            onMouseEnter={() => speakLabel('Click here to update your profile')}
+                            onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ගිණුම සංස්කරණය කිරීමට මෙතන click කරන්න') : speakLabel('Click here to update your profile')}
                         >
                             Update Profile
                         </button>
                         <button
                             className="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 w-56"
                             onClick={handleDeleteProfile}
-                            onMouseEnter={() => speakLabel('Click here to delete your profile')}
+                            onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ගිණුම ඉවත් කිරීමට මෙතන click කරන්න') : speakLabel('Click here to delete your profile')}
                         >
                             Delete Profile
                         </button>
-                        {newImageUrl}
                     </div>
                 </div>
             </div>

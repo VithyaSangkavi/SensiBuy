@@ -10,6 +10,7 @@ import AdminInterface from "./pages/AdminInterface";
 import UserInterface from "./pages/UserInterface";
 import Profile from "./pages/User Management/Profile";
 import Profile2  from "./pages/User Management/Profile2";
+import UserReport from "./pages/User Management/UserReport";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
             <Route path="/profile2" element={<Profile2 />} />
           </Route>
           <Route element={<AdminNavbar />}>
+            <Route path="/userReport" element={<UserReport />} />
             <Route path="/AdminInterface" element={<AdminInterface />} />
           </Route>
         </Routes>

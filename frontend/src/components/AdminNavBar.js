@@ -18,7 +18,7 @@ const AdminNavbar = () => {
 
   const handleLogout = async () => {
     try {
-      const response = await axios.post('http://localhost:3000/users/logout', {
+      const response = await axios.post('http://localhost:4000/api/users/logout', {
         token: localStorage.getItem('token'),
       });
 
@@ -52,6 +52,7 @@ const AdminNavbar = () => {
         <div className='flex gap-[50px]'>
           <a href="#" className="hover:text-gray-300 text-xl">Products</a>
           <a href="#" className="hover:text-gray-300 text-xl">Tickets</a>
+          <a href="/userReport" className="hover:text-gray-300 text-xl">Users</a>
         </div>
 
         <div className='flex gap-[20px]'>

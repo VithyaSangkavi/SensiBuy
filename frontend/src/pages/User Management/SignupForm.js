@@ -5,13 +5,19 @@ import SignUpImage from '../../images/signup.png'
 
 const SignupForm = () => {
 
+
+    const [emailError, setEmailError] = useState('');
+
     const navigate = useNavigate('');
     const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
     const [recognizedSpeech, setRecognizedSpeech] = useState('');
 
+    //const [selectedLanguage, setSelectedLanguage] = useState("Sinhala");
+    const selectedLanguage = localStorage.getItem("selectedLanguage") || "English";
+    console.log(selectedLanguage)
+
     const [confirmPassword, setConfirmPassword] = useState('');
     const [passwordMatchError, setPasswordMatchError] = useState('');
-    const [userImage, setImage] = useState("");
 
     const [formData, setFormData] = useState({
         firstName: '',
@@ -23,45 +29,6 @@ const SignupForm = () => {
     });
 
 
-    const [loading, setLoading] = useState(false);
-    const [imageUrl, setImageUrl] = useState("");
-
-    const convertBase64 = (file) => {
-        return new Promise((resolve, reject) => {
-            const fileReader = new FileReader();
-            fileReader.readAsDataURL(file);
-
-            fileReader.onload = () => {
-                resolve(fileReader.result);
-            };
-
-            fileReader.onerror = (error) => {
-                reject(error);
-            };
-        });
-    }
-
-    //uploading the image
-    const uploadImage = async (event) => {
-        event.preventDefault();
-
-        const file = event.target.files[0];
-        const base64 = await convertBase64(file);
-        setLoading(true);
-        console.log(base64);
-        axios
-            .post(`http://localhost:4000/uploadImage`, { image: base64 })
-            .then((res) => {
-                console.log(res.data);
-                setImageUrl(res.data);
-
-                //res.data
-                alert("Image uploaded Succesfully");
-            })
-            .then(() => setLoading(false))
-            .catch(console.log);
-    };
-
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData({
@@ -69,33 +36,95 @@ const SignupForm = () => {
             [name]: value,
         });
 
-        if (name === 'password') {
-            // Check if confirm password matches
-            if (confirmPassword !== value) {
-                setPasswordMatchError('Passwords do not match');
-            } else {
-                setPasswordMatchError('');
-            }
-        } else if (name === 'confirmPassword') {
-            // Update the confirm password state
-            setConfirmPassword(value);
+        // if (name === 'password') {
+        //     // Check if confirm password matches
+        //     if (confirmPassword !== value) {
+        //         if (selectedLanguage === 'Sinhala') {
+        //             setEmailError('මුර පද ගැලපෙන්නේ නැත');
+        //           } else {
+        //             setEmailError('Passwords do not match');
+        //           }
+        //     } else {
+        //         setPasswordMatchError('');
+        //     }
+        // } else if (name === 'confirmPassword') {
+        //     // Update the confirm password state
+        //     setConfirmPassword(value);
 
-            // Check if confirm password matches
-            if (formData.password !== value) {
-                setPasswordMatchError('Passwords do not match');
-            } else {
-                setPasswordMatchError('');
-            }
-        }
+        //     // Check if confirm password matches
+        //     if (formData.password !== value) {
+        //         if (selectedLanguage === 'Sinhala') {
+        //             setEmailError('මුර පද ගැලපෙන්නේ නැත');
+        //           } else {
+        //             setEmailError('Passwords do not match');
+        //           }
+        //           return;
+        //     } else {
+        //         setPasswordMatchError('');
+        //     }
+        // }
     };
+
+    const validateName = (name) => {
+        // Check if the name contains only letters (no numbers or special characters)
+        return /^[A-Za-z]+$/.test(name);
+    };
+
+    const validateEmail = (email) => {
+        // Check if the email is in the proper format using a simple regex pattern
+        return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
 
+        // Validate first name
+        if (!validateName(formData.firstName)) {
+            // setEmailError('First name should contain only letters');
+            // return;
+            if (selectedLanguage === 'Sinhala') {
+                setEmailError('මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය');
+              } else {
+                setEmailError('First name should contain only letters');
+              }
+              return;
+        } else {
+            setEmailError('');
+        }
+
+        // Validate last name
+        if (!validateName(formData.lastName)) {
+            if (selectedLanguage === 'Sinhala') {
+                setEmailError('අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය');
+              } else {
+                setEmailError('Last name should contain only letters');
+              }
+              return;
+        } else {
+            setEmailError('');
+        }
+
+        // Validate email
+        if (!validateEmail(formData.userEmail)) {
+            if (selectedLanguage === 'Sinhala') {
+                setEmailError('වලංගු නොවන ඊමේල් ආකෘතිය');
+              } else {
+                setEmailError('Invalid email format');
+              }
+              return;
+        } else {
+            setEmailError('');
+        }
+
         // Check if the passwords match
-        if (formData.password !== confirmPassword) {
-            setPasswordMatchError('Passwords do not match');
-            return;
+        if (formData.password !== formData.confirmPassword) {
+            if (selectedLanguage === 'Sinhala') {
+                setEmailError('මුර පද ගැලපෙන්නේ නැත');
+              } else {
+                setEmailError('Passwords do not match');
+              }
+              return;
         }
 
         try {
@@ -118,6 +147,12 @@ const SignupForm = () => {
         const utterance = new SpeechSynthesisUtterance(labelText);
         window.speechSynthesis.speak(utterance);
     };
+
+    const speakSinhala = (sinhalaLabel) => {
+        const utterance = new SpeechSynthesisUtterance(sinhalaLabel);
+        utterance.lang = "si-LK"
+        window.speechSynthesis.speak(utterance);
+    }
 
     // // Initialize SpeechRecognition
     // recognition.lang = 'en-US';
@@ -156,15 +191,17 @@ const SignupForm = () => {
                         <br />
                         <br />
                         <h2 className="text-blue-900 font-bold text-2xl  mb-4"
-                            onMouseEnter={() => speakLabel('You can register yourself by providing your details')}>USER REGISTRATION</h2><br />
+                            onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('පහත විස්තර ලබා දීමෙන් ඔබම ලියාපදිංචි වන්න') : speakLabel('Register yourself by providing following details')}>
+                                USER REGISTRATION
+                                </h2><br />
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName"
-                                    onMouseEnter={() => speakLabel('Enter your First Name')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුල් නම ඇතුලත් කරන්න') : speakLabel('Enter your first name')}>
                                     First Name:
                                 </label>
                                 <input
-                                    className="w-full border rounded"
+                                    className="w-full border rounded px-2"
                                     type="text"
                                     id="firstName"
                                     name="firstName"
@@ -177,11 +214,11 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastName"
-                                    onMouseEnter={() => speakLabel('Enter your Last Name')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ අවසන් නම ඇතුලත් කරන්න') : speakLabel('Enter your last name')}>
                                     Last Name:
                                 </label>
                                 <input
-                                    className="w-full border rounded text-s"
+                                    className="w-full border rounded text-s px-2"
                                     type="text"
                                     id="lastName"
                                     name="lastName"
@@ -193,11 +230,11 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userEmail"
-                                    onMouseEnter={() => speakLabel('Enter your email')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ විද්‍යුත් තැපෑල ඇතුලත් කරන්න') : speakLabel('Enter your email address')}>
                                     Email:
                                 </label>
                                 <input
-                                    className="w-full border rounded"
+                                    className="w-full border rounded px-2"
                                     type="email"
                                     id="userEmail"
                                     name="userEmail"
@@ -209,11 +246,11 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password"
-                                    onMouseEnter={() => speakLabel('Enter you password')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Enter your password')}>
                                     Password:
                                 </label>
                                 <input
-                                    className="w-full border rounded"
+                                    className="w-full border rounded px-2"
                                     type="password"
                                     id="password"
                                     name="password"
@@ -225,29 +262,34 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword"
-                                    onMouseEnter={() => speakLabel('Re enter your password')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('නැවත ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Re enter your password')}>
                                     Confirm Password:
                                 </label>
                                 <input
-                                    className="w-full border rounded"
+                                    className="w-full border rounded px-2"
                                     type="password"
                                     id="confirmPassword"
                                     name="confirmPassword"
                                     placeholder='Re-enter your password'
-                                    value={confirmPassword}
+                                    value={formData.confirmPassword}
                                     onChange={handleChange}
                                     required
                                 />
-                                {passwordMatchError && (
-                                    <p className="text-red-500 text-sm">{passwordMatchError}</p>
+                                {emailError && (
+                                    <p className="text-red-500 font-bold text-sm" onMouseEnter={() =>  selectedLanguage === "Sinhala" ? speakSinhala(emailError) : speakLabel(emailError)}>
+                                        {emailError}
+                                    </p>
                                 )}
+                                {/* {passwordMatchError && (
+                                    <p className="text-red-500 font-bold text-sm"onMouseEnter={() =>  selectedLanguage === "Sinhala" ? speakSinhala(passwordMatchError) : speakLabel(passwordMatchError)}>{passwordMatchError}</p>
+                                )} */}
                             </div>
+                            
                             <div>
                                 <button
                                     type="submit"
                                     className="w-full bg-blue-900 text-white p-2 rounded hover:bg-blue-600 font-bold"
-                                    onMouseEnter={() => speakLabel('Click to signup')}
-                                >
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ලියාපදිංචි වීමට click කරන්න') : speakLabel('Click to signup')}>
                                     Sign Up
                                 </button>
                                 <br /><br />

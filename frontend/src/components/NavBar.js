@@ -6,6 +6,7 @@ import EyeLogo from '../images/Eye.png';
 const Navbar = () => {
   const navigate = useNavigate();
   const [storedUserName, setStoredUserName] = useState(localStorage.getItem('userName'));
+  const selectedLanguage = localStorage.getItem('selectedLanguage')
 
   const [user, setUser] = useState(null);
 
@@ -15,6 +16,17 @@ const Navbar = () => {
       setUser({ userName: storedUserName });
     }
   }, []);
+
+  const speakLabel = (labelText) => {
+    const utterance = new SpeechSynthesisUtterance(labelText);
+    window.speechSynthesis.speak(utterance);
+  };
+
+  const speakSinhala = (sinhalaLabel) => {
+    const utterance = new SpeechSynthesisUtterance(sinhalaLabel);
+    utterance.lang = "si-LK"
+    window.speechSynthesis.speak(utterance);
+  }
 
   const handleLogout = async () => {
     try {
@@ -60,7 +72,8 @@ const Navbar = () => {
             {user ? (
               <>
                 <span className="text-gray-300">Hello, {user.userName}</span>
-                <button onClick={viewProfile} className="hover:text-gray-300 border px-4 py-2 rounded-lg">View Profile</button>
+                <button onClick={viewProfile} className="hover:text-gray-300 border px-4 py-2 rounded-lg"
+                 onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ගිණුම් විස්තර බලන්න') : speakLabel('Click here to view your profile details')}>View Profile</button>
                 <button onClick={handleLogout} className="hover:text-gray-300 border px-4 py-2 rounded-lg">Logout</button>
               </>
             ) : (
