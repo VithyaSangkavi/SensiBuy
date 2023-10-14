@@ -85,10 +85,10 @@ const SignupForm = () => {
             // return;
             if (selectedLanguage === 'Sinhala') {
                 setEmailError('මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය');
-              } else {
+            } else {
                 setEmailError('First name should contain only letters');
-              }
-              return;
+            }
+            return;
         } else {
             setEmailError('');
         }
@@ -97,10 +97,10 @@ const SignupForm = () => {
         if (!validateName(formData.lastName)) {
             if (selectedLanguage === 'Sinhala') {
                 setEmailError('අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය');
-              } else {
+            } else {
                 setEmailError('Last name should contain only letters');
-              }
-              return;
+            }
+            return;
         } else {
             setEmailError('');
         }
@@ -109,10 +109,10 @@ const SignupForm = () => {
         if (!validateEmail(formData.userEmail)) {
             if (selectedLanguage === 'Sinhala') {
                 setEmailError('වලංගු නොවන ඊමේල් ආකෘතිය');
-              } else {
+            } else {
                 setEmailError('Invalid email format');
-              }
-              return;
+            }
+            return;
         } else {
             setEmailError('');
         }
@@ -121,10 +121,10 @@ const SignupForm = () => {
         if (formData.password !== formData.confirmPassword) {
             if (selectedLanguage === 'Sinhala') {
                 setEmailError('මුර පද ගැලපෙන්නේ නැත');
-              } else {
+            } else {
                 setEmailError('Passwords do not match');
-              }
-              return;
+            }
+            return;
         }
 
         try {
@@ -153,6 +153,10 @@ const SignupForm = () => {
         utterance.lang = "si-LK"
         window.speechSynthesis.speak(utterance);
     }
+
+    const stopSpeaking = () => {
+        window.speechSynthesis.cancel();
+    };
 
     // // Initialize SpeechRecognition
     // recognition.lang = 'en-US';
@@ -191,13 +195,15 @@ const SignupForm = () => {
                         <br />
                         <br />
                         <h2 className="text-blue-900 font-bold text-2xl  mb-4"
-                            onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('පහත විස්තර ලබා දීමෙන් ඔබම ලියාපදිංචි වන්න') : speakLabel('Register yourself by providing following details')}>
-                                USER REGISTRATION
-                                </h2><br />
+                            onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('පහත විස්තර ලබා දීමෙන් ඔබම ලියාපදිංචි වන්න') : speakLabel('Register yourself by providing following details')}
+                            onMouseLeave={stopSpeaking}>
+                            USER REGISTRATION
+                        </h2><br />
                         <form onSubmit={handleSubmit}>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="firstName"
-                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුල් නම ඇතුලත් කරන්න') : speakLabel('Enter your first name')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුල් නම ඇතුලත් කරන්න') : speakLabel('Enter your first name')}
+                                    onMouseLeave={stopSpeaking}>
                                     First Name:
                                 </label>
                                 <input
@@ -214,7 +220,8 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="lastName"
-                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ අවසන් නම ඇතුලත් කරන්න') : speakLabel('Enter your last name')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ අවසන් නම ඇතුලත් කරන්න') : speakLabel('Enter your last name')}
+                                    onMouseLeave={stopSpeaking}>
                                     Last Name:
                                 </label>
                                 <input
@@ -230,7 +237,8 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="userEmail"
-                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ විද්‍යුත් තැපෑල ඇතුලත් කරන්න') : speakLabel('Enter your email address')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ විද්‍යුත් තැපෑල ඇතුලත් කරන්න') : speakLabel('Enter your email address')}
+                                    onMouseLeave={stopSpeaking}>
                                     Email:
                                 </label>
                                 <input
@@ -246,7 +254,8 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password"
-                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Enter your password')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Enter your password')}
+                                    onMouseLeave={stopSpeaking}>
                                     Password:
                                 </label>
                                 <input
@@ -262,7 +271,8 @@ const SignupForm = () => {
                             </div>
                             <div className="mb-4">
                                 <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword"
-                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('නැවත ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Re enter your password')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('නැවත ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Re enter your password')}
+                                    onMouseLeave={stopSpeaking}>
                                     Confirm Password:
                                 </label>
                                 <input
@@ -276,7 +286,8 @@ const SignupForm = () => {
                                     required
                                 />
                                 {emailError && (
-                                    <p className="text-red-500 font-bold text-sm" onMouseEnter={() =>  selectedLanguage === "Sinhala" ? speakSinhala(emailError) : speakLabel(emailError)}>
+                                    <p className="text-red-500 font-bold text-sm" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala(emailError) : speakLabel(emailError)}
+                                        onMouseLeave={stopSpeaking}>
                                         {emailError}
                                     </p>
                                 )}
@@ -284,16 +295,19 @@ const SignupForm = () => {
                                     <p className="text-red-500 font-bold text-sm"onMouseEnter={() =>  selectedLanguage === "Sinhala" ? speakSinhala(passwordMatchError) : speakLabel(passwordMatchError)}>{passwordMatchError}</p>
                                 )} */}
                             </div>
-                            
+
                             <div>
                                 <button
                                     type="submit"
                                     className="w-full bg-blue-900 text-white p-2 rounded hover:bg-blue-600 font-bold"
-                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ලියාපදිංචි වීමට click කරන්න') : speakLabel('Click to signup')}>
+                                    onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ලියාපදිංචි වීමට click කරන්න') : speakLabel('Click to signup')}
+                                    onMouseLeave={stopSpeaking}>
                                     Sign Up
                                 </button>
                                 <br /><br />
-                                <Link to="/login"> Already have an account? Login</Link>
+                                <Link to="/login" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('දැනටමත් ගිණුමක් තිබේද?') : speakLabel('Already have an account?')}
+                                    onMouseLeave={stopSpeaking}>
+                                    Already have an account? Login</Link>
                             </div>
                         </form>
                     </div>

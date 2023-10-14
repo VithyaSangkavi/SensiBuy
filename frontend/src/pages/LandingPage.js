@@ -47,7 +47,7 @@ const LandingPage = () => {
     try {
       setSelectedLanguage(newLanguage);
       localStorage.setItem("selectedLanguage", newLanguage);
-      console.log("language ", selectedLanguage)
+      console.log("set language ", selectedLanguage)
     } catch (error) {
       console.error("Error updating localStorage:", error);
     }
@@ -71,6 +71,10 @@ const LandingPage = () => {
     }
   };
 
+  const stopSpeaking = () => {
+    window.speechSynthesis.cancel();
+  };  
+
   return (
     <div className="relative h-screen">
       <img src={picture} alt="Background" className="w-full h-full object-cover" />
@@ -86,6 +90,7 @@ const LandingPage = () => {
             onChange={handleLanguageChange}
             value={selectedLanguage}
             onMouseEnter={() => speakLabel('Select the language')}
+            onMouseLeave={stopSpeaking}
             >Select Language
             <optgroup label="Select Language">
               <option value="English" >English</option>
@@ -99,6 +104,7 @@ const LandingPage = () => {
             className="border rounded text-xl font-semibold px-12 py-2"
             onClick={handleSignUpClick}
             onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ලියාපදිංචි වීමට මෙතන click කරන්න') : speakLabel('Click here to signup')}
+            onMouseLeave={stopSpeaking}
           >
             SIGN UP
           </button><br />
@@ -106,6 +112,7 @@ const LandingPage = () => {
             className="border rounded text-xl font-semibold px-12 py-2"
             onClick={handleLoginClick}
             onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('පුරනය වීමට මෙතන click කරන්න') : speakLabel('Click here to login')}
+            onMouseLeave={stopSpeaking}
           >
             LOGIN
           </button>

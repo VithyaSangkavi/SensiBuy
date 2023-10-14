@@ -54,10 +54,10 @@ const AllUsers = () => {
 
     return (
         <div className="container mx-auto mt-10">
-            <h1 className="text-2xl font-semibold mb-4 text-center">User Report</h1>
+            <h1 className="text-2xl font-bold mb-4 text-center">USER REPORT</h1>
             <div className="flex justify-between mb-4">
                 <div>
-                    <label className="text-gray-500 font-bold">Filter users by first name: </label>
+                    <label className="text-gray-800 font-bold">Filter users by first name: </label>
                     <input
                         type="text"
                         className="border-2 rounded px-2 py-1"
@@ -77,8 +77,8 @@ const AllUsers = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {filteredUsers.map((user) => (
-                            <tr key={user._id}>
+                        {filteredUsers.map((user, index) => (
+                            <tr key={user._id} className={index % 2 === 0 ? 'bg-white' : 'bg-gray-200'}>
                                 <td className="border px-4 py-2">{user._id}</td>
                                 <td className="border px-4 py-2">{user.firstName}</td>
                                 <td className="border px-4 py-2">{user.lastName}</td>

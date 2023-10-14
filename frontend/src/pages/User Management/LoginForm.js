@@ -37,6 +37,10 @@ function LoginForm() {
     window.speechSynthesis.speak(utterance);
   }
 
+  const stopSpeaking = () => {
+    window.speechSynthesis.cancel();
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -109,12 +113,14 @@ function LoginForm() {
           <div className="w-full px-[50px] h-[400px] ">
             <form onSubmit={handleSubmit}>
               <br /><br />
-              <h1 className='font-bold text-xl text-blue-900' onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('කරුණාකර ඔබගේ පිවිසුම් අක්තපත්‍ර සපයන්න') : speakLabel('Please provide your login credentials')}>
+              <h1 className='font-bold text-xl text-blue-900' onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('කරුණාකර ඔබගේ පිවිසුම් අක්තපත්‍ර සපයන්න') : speakLabel('Please provide your login credentials')}
+                onMouseLeave={stopSpeaking}>
                 Login to your account
               </h1>
               <br />
               <div>
-                <label onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ විද්‍යුත් තැපෑල ඇතුලත් කරන්න') : speakLabel('Enter your email address')}>
+                <label onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ විද්‍යුත් තැපෑල ඇතුලත් කරන්න') : speakLabel('Enter your email address')}
+                  onMouseLeave={stopSpeaking}>
                   Email Address
                 </label>
                 <br />
@@ -122,17 +128,21 @@ function LoginForm() {
               </div>
               <br />
               <div>
-                <label onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Enter your password')}>
+                <label onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ මුරපදය ඇතුලත් කරන්න') : speakLabel('Enter your password')}
+                  onMouseLeave={stopSpeaking}>
                   Password
                 </label>
                 <br />
                 <input type="password" placeholder="password" className='border-2 border[#1F2937] w-[250px] h-[35px]' value={password} onChange={(e) => setPassword(e.target.value)} />
               </div>
               <br />
-              <button onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('පුරනය වීමට click කරන්න') : speakLabel('Click to signin')} type="submit" className='bg-blue-900 pr-20 pl-20 pt-2 pb-2 text-white w-[250px] h-[35px] font-bold'>Sign in</button>
+              <button onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('පුරනය වීමට click කරන්න') : speakLabel('Click to signin')} type="submit" className='bg-blue-900 pr-20 pl-20 pt-2 pb-2 text-white w-[250px] h-[35px] font-bold'
+                onMouseLeave={stopSpeaking}>Sign in</button>
               <br />
               <br />
-              <Link to="/signup"> Don't have an account? Create Account</Link>
+              <Link to="/signup" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබට ගිණුමක් නැද්ද?') : speakLabel("Don't have an account?")}
+                onMouseLeave={stopSpeaking}>
+                Don't have an account? Create Account</Link>
             </form>
           </div>
         </div>

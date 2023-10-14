@@ -168,6 +168,10 @@ const Profile2 = () => {
         window.speechSynthesis.speak(utterance);
     }
 
+    const stopSpeaking = () => {
+        window.speechSynthesis.cancel();
+      }; 
+
     return (
 
         <div>
@@ -195,7 +199,8 @@ const Profile2 = () => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2"
-                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ඊමේල්, ' + userEmail) : speakLabel('Your email is ' + userEmail)}>
+                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ඊමේල්, ' + userEmail) : speakLabel('Your email is ' + userEmail)}
+                                onMouseLeave={stopSpeaking}>
                                 Email:
                             </label>
                             <input
@@ -211,7 +216,8 @@ const Profile2 = () => {
                                 null
                             ) : (
                                 // Display an error message
-                                <p className="text-red-500 font-bold text-sm"  onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('වලංගු නොවන ඊමේල් ආකෘතිය') : speakLabel('Invalid email format')}>
+                                <p className="text-red-500 font-bold text-sm"  onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('වලංගු නොවන ඊමේල් ආකෘතිය') : speakLabel('Invalid email format')}
+                                onMouseLeave={stopSpeaking}>
                                     {selectedLanguage === 'Sinhala'
                                         ? 'වලංගු නොවන ඊමේල් ආකෘතිය'
                                         : 'Invalid email format'}
@@ -222,7 +228,8 @@ const Profile2 = () => {
                     <div className='flex gap-[50px] w-full'>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2"
-                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබේ මුල් නම, ' + firstName) : speakLabel('Your first name is ' + firstName)}>
+                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබේ මුල් නම, ' + firstName) : speakLabel('Your first name is ' + firstName)}
+                                onMouseLeave={stopSpeaking}>
                                 First Name:
                             </label>
                             <input
@@ -232,14 +239,15 @@ const Profile2 = () => {
                                 name="firstName"
                                 value={firstName}
                                 onChange={(e) => { setFirstName(e.target.value) }}
-                                onMouseEnter={() => speakLabel()}
+                                // onMouseEnter={() => speakLabel()}
                             />
                             {validateName(firstName) ? (
                                 // Valid input
                                 null
                             ) : (
                                 // Display an error message
-                                <p className="text-red-500 font-bold text-sm" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය') : speakLabel('First name should contain only letters')}>
+                                <p className="text-red-500 font-bold text-sm" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය') : speakLabel('First name should contain only letters')}
+                                onMouseLeave={stopSpeaking}>
                                     {selectedLanguage === 'Sinhala'
                                         ? 'මුල් නමේ අකුරු පමණක් අඩංගු විය යුතුය'
                                         : 'First name should contain only letters'}
@@ -248,7 +256,8 @@ const Profile2 = () => {
                         </div>
                         <div className="mb-4">
                             <label className="block text-gray-700 text-sm font-bold mb-2"
-                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබේ අවසාන නම, ' + lastName) : speakLabel('Your last name is ' + lastName)}>
+                                onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබේ අවසාන නම, ' + lastName) : speakLabel('Your last name is ' + lastName)}
+                                onMouseLeave={stopSpeaking}>
                                 Last Name:
                             </label>
                             <input
@@ -264,7 +273,8 @@ const Profile2 = () => {
                                 null
                             ) : (
                                 // Display an error message
-                                <p className="text-red-500 font-bold text-sm" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය') : speakLabel('Last name should contain only letters')}>
+                                <p className="text-red-500 font-bold text-sm" onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය') : speakLabel('Last name should contain only letters')}
+                                onMouseLeave={stopSpeaking}>
                                     {selectedLanguage === 'Sinhala'
                                         ? 'අවසාන නමේ අකුරු පමණක් අඩංගු විය යුතුය'
                                         : 'Last name should contain only letters'}
@@ -278,14 +288,14 @@ const Profile2 = () => {
                             className="bg-blue-900 text-white px-2 py-2 rounded hover:bg-blue-600 w-56"
                             onClick={handleSubmit}
                             onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ගිණුම සංස්කරණය කිරීමට මෙතන click කරන්න') : speakLabel('Click here to update your profile')}
-                        >
+                            onMouseLeave={stopSpeaking}>
                             Update Profile
                         </button>
                         <button
                             className="bg-red-500 text-white px-2 py-2 rounded hover:bg-red-600 w-56"
                             onClick={handleDeleteProfile}
                             onMouseEnter={() => selectedLanguage === "Sinhala" ? speakSinhala('ඔබගේ ගිණුම ඉවත් කිරීමට මෙතන click කරන්න') : speakLabel('Click here to delete your profile')}
-                        >
+                            onMouseLeave={stopSpeaking} >
                             Delete Profile
                         </button>
                     </div>
